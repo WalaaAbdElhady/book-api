@@ -1,5 +1,6 @@
 const Comment = require('./../models/commentModel');
 const catchAsync = require('./../utils/catchAsync');
+const AppError = require('./../utils/appError');
 
 exports.setBookId = (req, res, next) => {
   // Allow nested routes
@@ -22,7 +23,7 @@ exports.getAllComments = catchAsync(async (req, res, next) => {
 exports.getComment = catchAsync(async (req, res, next) => {
   const comment = await Comment.findById(req.params.id);
   if (!comment) {
-    return next('No Comment found with that ID');
+    return next(new AppError('No Comment found with that ID', 404));
   }
 
   res.status(200).json({
@@ -46,7 +47,7 @@ exports.createComment = catchAsync(async (req, res, next) => {
 exports.updateComment = catchAsync(async (req, res, next) => {
   const comment = await Comment.findById(req.params.id);
   if (!comment) {
-    return next('No comment found with that ID');
+    return next(new AppError('No Comment found with that ID', 404));
   }
 
   const doc = await Comment.findByIdAndUpdate(req.params.id, req.body, {
@@ -64,7 +65,7 @@ exports.updateComment = catchAsync(async (req, res, next) => {
 exports.deleteComment = catchAsync(async (req, res, next) => {
   const comment = await Comment.findById(req.params.id);
   if (!comment) {
-    return next('No comment found with that ID');
+    return next(new AppError('No Comment found with that ID', 404));
   }
 
   await Comment.findByIdAndDelete(req.params.id);

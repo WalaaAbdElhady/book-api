@@ -1,6 +1,7 @@
 const Category = require('./../models/categoryModel');
 const Book = require('./../models/bookModel');
 const catchAsync = require('./../utils/catchAsync');
+const AppError = require('./../utils/appError');
 
 exports.getAllCategories = catchAsync(async (req, res, next) => {
   const categories = await Category.find();
@@ -16,7 +17,7 @@ exports.getAllCategories = catchAsync(async (req, res, next) => {
 exports.getCategory = catchAsync(async (req, res, next) => {
   const category = await Category.findById(req.params.id);
   if (!category) {
-    return next('No category found with that ID');
+    return next(new AppError('No category found with that ID', 404));
   }
 
   res.status(200).json({
@@ -40,7 +41,7 @@ exports.createCategory = catchAsync(async (req, res, next) => {
 exports.updateCategory = catchAsync(async (req, res, next) => {
   const category = await Category.findById(req.params.id);
   if (!category) {
-    return next('No category found with that ID');
+    return next(new AppError('No category found with that ID', 404));
   }
 
   const doc = await Category.findByIdAndUpdate(req.params.id, req.body, {
@@ -58,7 +59,7 @@ exports.updateCategory = catchAsync(async (req, res, next) => {
 exports.deleteCategory = catchAsync(async (req, res, next) => {
   const category = await Category.findById(req.params.id);
   if (!category) {
-    return next('No category found with that ID');
+    return next(new AppError('No category found with that ID', 404));
   }
 
   await Category.findByIdAndDelete(req.params.id);

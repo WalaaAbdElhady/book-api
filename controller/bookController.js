@@ -1,6 +1,7 @@
 const Book = require('./../models/bookModel');
 const Comment = require('./../models/commentModel');
 const catchAsync = require('./../utils/catchAsync');
+const AppError = require('./../utils/appError');
 
 exports.getAllBooks = catchAsync(async (req, res, next) => {
   const books = await Book.find();
@@ -16,7 +17,7 @@ exports.getAllBooks = catchAsync(async (req, res, next) => {
 exports.getBook = catchAsync(async (req, res, next) => {
   const book = await Book.findById(req.params.id);
   if (!book) {
-    return next('No book found with that ID');
+    return next(new AppError('No book found with that ID', 404));
   }
 
   res.status(200).json({
@@ -40,7 +41,7 @@ exports.createBook = catchAsync(async (req, res, next) => {
 exports.updateBook = catchAsync(async (req, res, next) => {
   const book = await Book.findById(req.params.id);
   if (!book) {
-    return next('No book found with that ID');
+    return next(new AppError('No book found with that ID', 404));
   }
 
   const doc = await Book.findByIdAndUpdate(req.params.id, req.body, {
@@ -58,7 +59,7 @@ exports.updateBook = catchAsync(async (req, res, next) => {
 exports.deleteBook = catchAsync(async (req, res, next) => {
   const book = await Book.findById(req.params.id);
   if (!book) {
-    return next('No book found with that ID');
+    return next(new AppError('No book found with that ID', 404));
   }
 
   await Book.findByIdAndDelete(req.params.id);
