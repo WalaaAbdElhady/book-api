@@ -1,12 +1,15 @@
 const express = require('express');
 const commentController = require('./../controller/commentController');
+const authController = require('./../controller/authController');
 
 const router = express.Router({ mergeParams: true });
 
+router.use(authController.protect);
+
 router
   .route('/')
-  .get(commentController.getAllComments)
-  .post(commentController.setBookId, commentController.createComment);
+  .get(authController.restrictTo('admin'), commentController.getAllComments)
+  .post(commentController.setBookUserIds, commentController.createComment);
 
 router
   .route('/:id')

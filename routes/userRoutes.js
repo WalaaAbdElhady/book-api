@@ -19,11 +19,6 @@ router.patch(
   authController.restrictTo('user'),
   userController.updateMe
 );
-router.delete(
-  '/deleteMe',
-  authController.restrictTo('user'),
-  userController.deleteMe
-);
 
 router.delete(
   '/delete-account',
@@ -39,7 +34,7 @@ router
 router
   .route('/:id')
   .get(userController.getUser)
-  .patch(userController.updateUser)
-  .delete(userController.deleteUser);
+  .patch(authController.restrictTo('admin'), userController.updateUser)
+  .delete(authController.restrictTo('admin'), userController.deleteUser);
 
 module.exports = router;
