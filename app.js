@@ -1,5 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
+const cors = require('cors');
 
 const bookRouter = require('./routes/bookRoutes');
 const categoryRouter = require('./routes/categoryRoutes');
@@ -9,6 +10,14 @@ const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controller/errorController');
 
 const app = express();
+
+app.use(
+  cors({
+    origin: '*',
+    methods: ['POST', 'GET', 'OPTIONS'],
+    allowedHeaders: ['Content-Type']
+  })
+);
 
 // Body parser, reading data from body into req.body
 app.use(express.json());
